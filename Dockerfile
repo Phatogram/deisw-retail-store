@@ -1,5 +1,5 @@
 # Etapa 1: Construcción (usando la imagen Maven con Temurin 26 que pidió tu profe)
-FROM maven:3.9.6-eclipse-temurin-26-alpine AS build
+FROM maven:3.9.16-eclipse-temurin-26-alpine AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
