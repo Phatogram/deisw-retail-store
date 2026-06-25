@@ -1,4 +1,4 @@
-# Etapa 1: Construcción (usando la imagen Maven con Temurin 26 que pidió tu profe)
+# Etapa 1: Construcción (usando la imagen Maven 3.9.16 con Temurin 26 que pidió tu profe)
 FROM maven:3.9.16-eclipse-temurin-26-alpine AS build
 WORKDIR /app
 COPY pom.xml .
@@ -6,7 +6,7 @@ COPY src ./src
 # Compilamos el proyecto creando el .jar
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución (usando la imagen JRE 26 que pidió tu profe)
+# Etapa 2: Ejecución (usando la imagen JRE 26)
 FROM eclipse-temurin:26-jre-alpine
 WORKDIR /app
 # Copiamos el .jar generado en la etapa anterior
