@@ -1,14 +1,18 @@
-# ── Stage 1: Build ──────────────────────────────────────────────
-FROM maven:3.9.16-eclipse-temurin-26-alpine AS builder
+# Etapa 1: Construcción (usando la imagen Maven 3.9.16 con Temurin 26 que pidió tu profe)
+FROM maven:3.9.16-eclipse-temurin-26-alpine AS build
 WORKDIR /app
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline -B || mvn dependency:go-offline -B
-COPY . .
-RUN mvn clean package -DskipTests -B
+COPY src ./src
+# Compilamos el proyecto creando el .jar
+RUN mvn clean package -DskipTests
 
-# ── Stage 2: Runtime ────────────────────────────────────────────
+# Etapa 2: Ejecución (usando la imagen JRE 26)
 FROM eclipse-temurin:26-jre-alpine
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
-EXPOSE 8096
+# Copiamos el .jar generado en la etapa anterior
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+# Comando de arranque
 ENTRYPOINT ["java", "-jar", "app.jar"]
