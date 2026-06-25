@@ -14,8 +14,8 @@ environment {
         stage('1. Compilación y Pruebas Unitarias') {
             steps {
                 echo "Compilando con Java 26 usando la imagen de Maven 3.9.16 del profesor..."
-                // Usamos estrictamente la versión 3.9.16
-                sh 'docker run --rm -v maven_cache:/root/.m2 -v "${WORKSPACE}":/usr/src/app -w /usr/src/app maven:3.9.16-eclipse-temurin-26-alpine mvn clean package'
+                // Usamos --volumes-from jenkins-master para que comparta la ruta exacta del código
+                sh "docker run --rm --volumes-from jenkins-master -v maven_cache:/root/.m2 -w ${env.WORKSPACE} maven:3.9.16-eclipse-temurin-26-alpine mvn clean package"
             }
         }
 
@@ -23,8 +23,8 @@ environment {
             steps {
                 echo "Enviando análisis a SonarQube..."
                 withSonarQubeEnv('MiSonarServer') {
-                    // Nuevamente usamos la versión 3.9.16 y la red interna de Sonar
-                    sh 'docker run --rm -v maven_cache:/root/.m2 -v "${WORKSPACE}":/usr/src/app -w /usr/src/app --network spring-postgres-net -e SONAR_HOST_URL=$SONAR_HOST_URL -e SONAR_AUTH_TOKEN=$SONAR_AUTH_TOKEN maven:3.9.16-eclipse-temurin-26-alpine mvn verify sonar:sonar'
+                    // Compartimos volúmenes e inyectamos las variables de entorno correctas para SonarQube
+                    sh "docker run --rm --volumes-from jenkins-master -v maven_cache:/root/.m2 -w ${env.WORKSPACE} --network spring-postgres-net -e SONAR_HOST_URL=${env.SONAR_HOST_URL} -e SONAR_AUTH_TOKEN=${env.SONAR_AUTH_TOKEN} maven:3.9.16-eclipse-temurin-26-alpine mvn verify sonar:sonar"
                 }
             }
         }
