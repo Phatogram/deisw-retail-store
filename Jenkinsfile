@@ -2,10 +2,10 @@ pipeline {
 
     agent any
 
-    environment {
-        /
-        REGISTRY_USER = "k1y0t4k4"
-        CODIGO_ESTUDIANTE = "u202314304" // ¡Reemplaza con tu código de estudiante!
+environment {
+        // Configuraciones de la imagen de Docker
+        REGISTRY_USER = "tu_usuario_dockerhub" // Reemplaza con tu usuario real de Docker Hub
+        CODIGO_ESTUDIANTE = "u202314304" // Reemplaza con tu codigo de estudiante
         IMAGE_NAME = "retail-store-${CODIGO_ESTUDIANTE}"
         TAG = "latest"
     }
