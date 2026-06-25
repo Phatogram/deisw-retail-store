@@ -1,6 +1,5 @@
-# Build stage: Maven + Temurin 26 JDK
 # Etapa 1: Construcción (Build) usando el wrapper de Maven y OpenJDK 26
-FROM maven.3.9.16-eclipse-temurin-26-alpine
+FROM eclipse-temurin:26-jdk-alpine AS build
 WORKDIR /app
 # Copiamos los archivos de configuración de Maven
 COPY .mvn/ .mvn/
